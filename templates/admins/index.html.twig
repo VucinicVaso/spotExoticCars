@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+
+			<h1 class="text-center text-white my-1">ADMIN PANEL</h1>
+
+			<div class="d-flex flex-row justify-content-around flex-wrap">
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="{{ path('news') }}" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-folder-open"></i>
+						</div>
+						<p class="text-center">{{ news }} NEWS</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-users"></i>
+						</div>
+						<p class="text-center">{{ users }} USERS</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-images"></i>
+						</div>
+						<p class="text-center">{{ spots }} SPOTS</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-comments"></i>
+						</div>
+						<p class="text-center">{{ comments }} COMMENTS</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-vote-yea"></i>
+						</div>
+						<p class="text-center">{{ votes }} VOTES</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-folder-open"></i>
+						</div>
+						<p class="text-center">{{ brand }} BRAND</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="#" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-folder-open"></i>
+						</div>
+						<p class="text-center">{{ model }} MODEL</p>
+					</a>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+			<div class="card bg-dark text-white">
+				<div class="card-header">
+					<img src="{{ asset('assets/images/') }}/{{ user.getProfileImage() }}" class="w-100" id="profile-img">
+				</div>
+				<div class="card-body">
+					<p>FIRSTNAME: <span class="badge badge-primary float-right">{{ user.firstname }}</span></p>
+					<p>LASTNAME: <span class="badge badge-primary float-right">{{ user.lastname }}</span></p>
+					<p>USERNAME: <span class="badge badge-primary float-right">{{ user.username }}</span></p>
+					<p>EMAIL: <span class="badge badge-primary float-right">{{ user.email }}</span></p>
+					<p>CITY: <span class="badge badge-primary float-right">{{ user.city }}</span></p>
+					<p>COUNTRY: <span class="badge badge-primary float-right">{{ user.country }}</span></p>
+					<p>DATE OF BIRTH: <span class="badge badge-primary float-right">{{ user.getDateOfBirth()|date("m/d/Y") }}</span></p>
+					<p>PROFILE CREATED: <span class="badge badge-primary float-right">{{ user.getCreatedAt()|date("m/d/Y") }}</span></p>
+					<a href="{{ path('admin_edit_profile') }}" class="btn btn-primary w-100">EDIT</a>
+					<a href="{{ path('admin_edit_password') }}" class="btn btn-primary w-100 mt-1">PASSWORD</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}

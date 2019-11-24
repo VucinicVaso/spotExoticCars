@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+			{# <?php include "includes/create_post_modal.php"; ?> #}
+			<button class="btn btn-info w-100" data-toggle="modal" data-target="#newPost">CREATE NEW SPOT</button>
+
+		{% if spots is empty %}
+			<p class="alert alert-warning text-center mt-2">YOU HAVE 0 SPOTS</p>
+		{% else %}
+			{% for id, spot in spots %}
+			<div class="card bg-dark mt-1 text-white">
+				<div class="card-header">
+					<h2 class="text-center">
+						<a href="#">{{ spot.brand }}</a>
+						<a href="#">{{ spot.model }}</a>						
+					</h2>
+				</div>
+				<div class="card-body">
+					<img src="{{ asset('assets/images/') }}/{{ spot.images[0] }}" class="w-100" id="profile_post_img">
+				</div>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-1">
+							<button class="btn btn-danger w-100" onclick="delete_post({{ spot.id }})">DELETE</button>
+							{# <script type="text/javascript" src="<?php echo BASE_URL; ?>/assets/js/post_delete.js"></script> #}
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-1">
+							<a href="#" class="btn btn-info w-100">VIEW</a>
+						</div>
+					</div>
+				</div>
+			</div>		
+			{% endfor %}
+		{% endif %}
+
+		</div>
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+			<div class="card bg-dark text-white">
+				<div class="card-header">
+					<img src="{{ asset('assets/images/') }}/{{ user.getProfileImage() }}" class="w-100" id="profile-img">
+				</div>
+				<div class="card-body">
+					<p>FIRSTNAME: <span class="badge badge-primary float-right">{{ user.firstname }}</span></p>
+					<p>LASTNAME: <span class="badge badge-primary float-right">{{ user.lastname }}</span></p>
+					<p>USERNAME: <span class="badge badge-primary float-right">{{ user.username }}</span></p>
+					<p>EMAIL: <span class="badge badge-primary float-right">{{ user.email }}</span></p>
+					<p>CITY: <span class="badge badge-primary float-right">{{ user.city }}</span></p>
+					<p>COUNTRY: <span class="badge badge-primary float-right">{{ user.country }}</span></p>
+					<p>DATE OF BIRTH: <span class="badge badge-primary float-right">{{ user.getDateOfBirth()|date("m/d/Y") }}</span></p>
+					<p>PROFILE CREATED: <span class="badge badge-primary float-right">{{ user.getCreatedAt()|date("m/d/Y") }}</span></p>
+					<p>SPOTS: <span class="badge badge-primary float-right">{{ spots|length }}</span></p>
+					<a href="{{ path('profile_edit') }}" class="btn btn-info w-100">EDIT</a>
+					<a href="{{ path('profile_edit_password') }}" class="btn btn-info w-100 mt-1">PASSWORD</a>
+				</div>
+				<div class="card-footer">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

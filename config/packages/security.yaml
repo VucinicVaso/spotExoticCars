@@ -1,0 +1,32 @@
+security:
+    encoders:
+        App\Entity\User: bcrypt
+    providers:
+        database_users:
+           # entity: { class: App\Entity\User, property: username }
+           entity: { class: App\Entity\User, property: email }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            pattern: ^/
+            
+            form_login:
+                check_path: security_login 
+                login_path: security_login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: pages_index
+
+                # username_parameter: _username
+                username_parameter: _email
+                password_parameter: _password
+
+            logout: 
+                path: security_logout
+                target: pages_index
+
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
