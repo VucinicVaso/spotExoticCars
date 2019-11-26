@@ -65,7 +65,7 @@ class NewsController extends AbstractController
         	/* upload images */
             $files = $form->get('images')->getData();
             foreach($files as $file){
-                $filename = "article-".$article->getTitle().'-'.uniqid().'.'.$file->guessExtension();
+                $filename = "article-".uniqid()."-".str_replace(" ", "-", $article->getTitle()).".".$file->guessExtension();
                 $file->move($this->getParameter('img_directory'), $filename);
                 $imgArr[] = $filename;
             }
@@ -89,11 +89,13 @@ class NewsController extends AbstractController
 
     /**
      * @Route("/article/{id}", name="news_show")
-     * @Security("is_granted('ROLE_USER')")
      */
-    public function show($id)
+    public function show(News $article)
     {
-    	//
+        return $this->render('news/show.html.twig', [
+            'title'   => $article->getTitle(),
+            'article' => $article,
+        ]);
     }
 
     /**

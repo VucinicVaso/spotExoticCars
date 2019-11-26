@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\NewsRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\BrandRepository")
  */
-class News implements \Serializable
+class Brand implements \Serializable
 {
     /**
      * @ORM\Id()
@@ -25,25 +26,37 @@ class News implements \Serializable
     private $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $body;
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $images = [];
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="news")
+     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="brand")
+     */
+    private $models;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="brand")
+     */
+    private $posts;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="brands")
      * @ORM\JoinColumn()
      */     
     private $user;
+
+    public function __construct()
+    {
+        $this->models = new ArrayCollection(); 
+        $this->posts  = new ArrayCollection();
+    }
+
+    // model
+    public function getModels() { return $this->models; }
+
+    // post
+    public function getPosts() { return $this->posts; }
 
     public function getId(): ?int { return $this->id; }
 
@@ -52,22 +65,6 @@ class News implements \Serializable
     public function setTitle(?string $title): self
     {
         $this->title = $title;
-        return $this;
-    }
-
-    public function getBody(): ?string { return $this->body; }
-
-    public function setBody(?string $body): self
-    {
-        $this->body = $body;
-        return $this;
-    }
-
-    public function getImages(): ?array { return $this->images; }
-
-    public function setImages(?array $images): self
-    {
-        $this->images = $images;
         return $this;
     }
 
@@ -91,8 +88,6 @@ class News implements \Serializable
         return serialize([
             $this->id,
             $this->title,
-            $this->body,
-            $this->images,
             $this->created_at,
             $this->user
         ]);
@@ -103,8 +98,6 @@ class News implements \Serializable
         list(
             $this->id,
             $this->title,
-            $this->body,
-            $this->images,
             $this->created_at,
             $this->user
         ) = unserialize($serialized);

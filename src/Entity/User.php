@@ -49,7 +49,6 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Assert\Email()
      * @Assert\NotBlank(message = "Email is empty.")
      * @Assert\Email(message = "Your email is not a valid email address.")
      * @Assert\Length(min=12, max=48, minMessage = "Email is too short. It should have 12 characters or more.")
@@ -77,14 +76,14 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Column(type="string", length=191, nullable=true)
      * @Assert\NotBlank(message = "City is empty.")
-     * @Assert\Length(min=5, max=100, minMessage = "City is too short. It should have 6 characters or more.")
+     * @Assert\Length(min=5, max=100, minMessage = "City is too short. It should have 5 characters or more.")
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=191, nullable=true)
      * @Assert\NotBlank(message = "Country is empty.")
-     * @Assert\Length(min=5, max=100, minMessage = "Country is too short. It should have 6 characters or more.")
+     * @Assert\Length(min=5, max=100, minMessage = "Country is too short. It should have 5 characters or more.")
      */
     private $country;
 
@@ -108,20 +107,49 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="user")
-     * 
      */
     private $news;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Brand", mappedBy="user")
+     */
+    private $brands;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="user")
+     */
+    private $models;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
+     */
+    private $posts;
 
     const ROLE_USER  = 'ROLE_USER';
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
     public function __construct()
     {
-        $this->news   = new ArrayCollection(); 
+        $this->news     = new ArrayCollection();
+        $this->brands   = new ArrayCollection(); 
+        $this->models   = new ArrayCollection();
+        $this->posts    = new ArrayCollection();
     }
 
     // news
     public function getNews() { return $this->news; }  
+
+    // brand
+    public function getBrands() { return $this->brands; }  
+
+    // model
+    public function getModels() { return $this->models; }
+
+    // post
+    public function getPosts() { return $this->posts; }
+
+    // votes
+    public function getVotes() { return $this->votes; }
 
     public function getId(): ?int { return $this->id; }
 
