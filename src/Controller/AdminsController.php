@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -19,6 +19,7 @@ use App\Form\ProfileType;
 use App\Form\ProfilePasswordType;
 use App\Repository\UserRepository;
 use App\Repository\NewsRepository;
+use App\Repository\ContactRepository;
 use App\Repository\BrandRepository;
 use App\Repository\ModelRepository;
 use App\Repository\PostRepository;
@@ -26,7 +27,6 @@ use App\Repository\CommentRepository;
 
 class AdminsController extends AbstractController
 {
-
     /**
      * @var UserRepository
      */   
@@ -35,6 +35,10 @@ class AdminsController extends AbstractController
      * @var NewsRepository
      */
     private $newsRepository;
+    /**
+     * @var ContactRepository
+     */    
+    private $contactRepository;
     /**
      * @var BrandRepository
      */
@@ -68,11 +72,12 @@ class AdminsController extends AbstractController
      */
     private $flashBag;    
 
-    public function __construct(UserRepository $userRepository, NewsRepository $newsRepository, BrandRepository $brandRepository, ModelRepository $modelRepository, PostRepository $postRepository, CommentRepository $commentRepository,
+    public function __construct(UserRepository $userRepository, NewsRepository $newsRepository, ContactRepository $contactRepository, BrandRepository $brandRepository, ModelRepository $modelRepository, PostRepository $postRepository, CommentRepository $commentRepository,
         FormFactoryInterface $formFactory, EntityManagerInterface $entityManager, RouterInterface $router, FlashBagInterface $flashBag)
     {
         $this->userRepository    = $userRepository;
         $this->newsRepository    = $newsRepository;
+        $this->contactRepository = $contactRepository;
         $this->brandRepository   = $brandRepository;
         $this->modelRepository   = $modelRepository;
         $this->postRepository    = $postRepository;
@@ -95,7 +100,8 @@ class AdminsController extends AbstractController
             'title'    => 'Admin: '.$user->getFirstname()." ".$user->getLastname(),
             'user'     => $user,
             'news'     => $this->newsRepository->countNews(),
-            'users'    => $this->userRepository->countUsers($user->getId()),
+            'messages' => $this->contactRepository->countMessages(),
+            'users'    => $this->userRepository->countUsers(),
             'posts'    => $this->postRepository->countPosts(),
             'comments' => $this->commentRepository->countComments(),
             'brand'    => $this->brandRepository->countBrand(),

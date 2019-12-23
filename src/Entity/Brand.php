@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BrandRepository")
+ * @UniqueEntity(fields="title", message="This title is already used")
  */
-class Brand implements \Serializable
+class Brand implements \JsonSerializable, \Serializable
 {
     /**
      * @ORM\Id()
@@ -17,11 +19,11 @@ class Brand implements \Serializable
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
-     * @ORM\Column(type="string", length=191, nullable=true)
+     * @ORM\Column(type="string", length=191, unique=true, nullable=true)
      * @Assert\NotBlank(message = "Title is empty.")
-     * @Assert\Length(min=3, max=191, minMessage = "Title is too short. It should have 3 characters or more.")
+     * @Assert\Length(min=2, max=191, minMessage = "Title is too short. It should have 2 characters or more.")
      */
     private $title;
 
@@ -31,12 +33,12 @@ class Brand implements \Serializable
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="brand")
+     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="brand", cascade={"remove"})
      */
     private $models;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="brand")
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="brand", cascade={"remove"})
      */
     private $posts;
 
@@ -82,6 +84,15 @@ class Brand implements \Serializable
     public function getUser() { return $this->user; }
  
     public function setUser($user): void { $this->user = $user; }  
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id'         => $this->id,
+            'title'      => $this->title,
+            'created_at' => $this->created_at
+        ];
+    }
 
     public function serialize()
     {

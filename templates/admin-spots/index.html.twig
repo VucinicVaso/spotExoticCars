@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row py-5 text-white">
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 d-flex flex-column justify-content-around flex-wrap text-center">
+        	<a href="{{ path('admin_profile') }}" class="text-white mt-3 mb-3"><i class="fas fa-arrow-left"></i> BACK TO THE ADMIN PANEL</a>
+
+			<h1>{{ title }}</h1>
+
+            {% for message in app.flashes('notice') %}
+            <div class="card-header alert alert-danger">
+                <p class="text-center">{{ message }}</p>
+            </div>
+            {% endfor %}
+		</div>
+
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+			<table class="table text-white">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>User</th>
+						<th>Image</th>
+						<th>Created at</th>
+						<th>View</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% if spots is empty %}
+					<p class="alert alert-warning text-center">0 new spots!</p>		
+					{% else %}
+					{% for id, s in spots %}
+					<tr>
+						<td>{{ s.id }}</td>
+						<td>
+							<a href="{{ path('admin_users_show', {'id': s.user.id}) }}">{{ s.user.firstname }} {{ s.user.lastname }}</a>
+						</td>
+						<td><img src="{{ asset('assets/images/') }}/{{ s.getImages()[0] }}" class="w-100" style="height: 100px;"></td>
+						<td>{{ s.getCreatedAt()|date("m/d/Y") }}</td>
+						<td><a href="{{ path('admin_spots_show', {'id': s.id}) }}" class="btn btn-info">View</a></td>
+						<td><a href="{{ path('admin_spots_delete', {'id': s.id}) }}" class="btn btn-danger">Delete</a></td>
+					</tr>
+					{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+{% endblock %}

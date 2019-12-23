@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row py-5">
+		
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 px-5 text-white">
+        	{% for message in app.flashes('notice') %}
+            <div class="card-header alert alert-info">
+                <p class="text-center">{{ message }}</p>
+            </div>
+        	{% endfor %}
+			<div class="card-body">
+				<h1 class="text-center pb-1"><i class="fas fa-arrow-down"></i> {{ title }}</h1>
+
+	            {{ form_start(form) }}
+	            {{ form_widget(form) }}
+	            {{ form_end(form) }}
+			</div>			
+		</div>
+
+		{# number of total posts #}
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 col-sm-12">
+			{# sidebar #}
+			{% include 'includes/sidebar.html.twig' %}
+		</div>
+
+	</div>
+
+{% endblock %}

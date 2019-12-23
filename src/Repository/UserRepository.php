@@ -13,13 +13,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function countUsers($userId)
+    /* count users */
+    public function countUsers()
     {
         return $this->createQueryBuilder('u')
             ->select('count(u.id)')
-            ->andWhere('u.id != :user')
-            ->setParameter('user', $userId)
+            ->andWhere('u.roles != :role')
+            ->setParameter('role', ['ROLE_ADMIN'])
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /* get users */
+    public function getUsers()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.firstname, u.lastname, u.email, u.profile_image, u.created_at')
+            ->andWhere('u.roles != :role')
+            ->setParameter('role', ['ROLE_ADMIN'])
+            ->getQuery()
+            ->getResult();
+    }
+
 }

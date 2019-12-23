@@ -1,0 +1,156 @@
+<!-- The brand Modal -->
+<div class="modal" id="brandList">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">BRAND LIST:</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body row">
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+          <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Title</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody id="brand-table">
+                <!-- list brands -->
+              </tbody>
+          </table>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+          <div id="edit-div"><!-- edit brand form --></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    // load brand when modal opens
+    $('#brandList').on('show.bs.modal', function (e) {
+      loadBrands();
+    });
+
+    // update form
+    $(document).on("click", "#edit", function() {
+      let id    = $(this).data('id');    // selected tables row brand-id
+      let title = $(this).data('title'); // selected tables row brand-title
+
+      // create update form
+      let edit_form = `
+        <div class="card">
+          <div class="card-body">
+            <form id="update_form">
+              <input type="hidden" name="update_id" id="update_id" value="${id}" />
+              <div class="form-group">
+                <label for="update_title">Title</label>
+                <input type="text" name="update_title" id="update_title" class="form-control" value="${title}" />
+              </div>
+              <button class="btn btn-primary">UPDATE</button>
+            </form>
+          </div>
+          <div class="card-footer" id="update-brand-error"></div>
+        </div>
+      `;
+ 
+      var divPosition = $(this).parent().position();          // get top position of selected tables row
+      $("#edit-div").css("margin-top", divPosition.top - 40); // set top position of update form to tables row 
+      $("#edit-div").html(edit_form);                         // set update form to #edit-div
+
+      $('#update_form').submit(function(e) {                  // submit update form
+        e.preventDefault();
+        let id    = $(this).find("#update_id").val();
+        let title = $(this).find("#update_title").val();
+        updateBrand(id, title);
+      });
+    });
+
+  });
+
+  /* load brands */
+  async function loadBrands() {
+    let result = await fetch(`${ ADDRESS }brand/get`, {
+      method: "GET", 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+    .then(result => result.json())
+    .then(result => { return result; }); 
+
+    if(result.brands.length > 0){
+      let listBrands = result.brands.map((b) => {
+        return `
+          <tr>
+            <td id="brand_id">${b.id}</td>
+            <td id="brand_title"><p>${b.title}</p></td>
+            <td>
+              <button class="btn btn-info" id="edit" data-id="${ b.id }" data-title="${ b.title }" style="width: 100%;">Edit</button>
+            </td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteBrand(${ b.id })" style="width: 100%;">DELETE</button>
+            </td>
+          </tr>         
+        `;
+      });
+
+      $("#brand-table").html(listBrands);
+    }
+  }
+
+  /* update brand */
+  async function updateBrand(id, title) {
+    let result = await fetch(`${ ADDRESS }brand/edit/${id}`, {
+      method: "POST", 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ "title": title })
+    })
+    .then(result => result.json())
+    .then(result => { return result; });
+    
+    if(result.success !== undefined && result.success != null && result.success !== ""){
+      alert(result.success);
+      location.reload();
+    }
+    if(result.errors !== undefined && result.errors != null && result.errors.length > 0) {
+        let show_update_errors = result.errors.map((err) => { return `<p class="alert alert-danger">${err}</p>`; });
+        $("#update-brand-error").html(show_update_errors);
+    }
+  }
+
+  /* delete brand */
+  async function deleteBrand(id) { 
+    await fetch(`${ ADDRESS }brand/delete/${id}`, {
+      method: "POST", 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.success !== undefined && result.success != null && result.success !== ""){
+        alert(result.success);
+        location.reload();
+      }else {
+        alert("Error. Brand not found. Please try again!");
+      }
+    });
+  }
+
+</script>

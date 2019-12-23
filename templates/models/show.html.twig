@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	<div class="row">
+
+		{# spots #}
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+
+			<div class="d-flex flex-column justify-content-around text-center flex-wrap text-white">
+				<a href="{{ path('spots') }}"><i class="fas fa-arrow-left"></i> Go back to spots</a>
+				<h1>{{ title }} SPOTS</h1>
+			</div>
+
+		{% if model.posts is empty %}
+			<p class="text-center alert alert-danger">0 spots!</p>
+		{% else %}
+			<div class="row">
+		{% for id, s in model.posts %}
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 py-2">
+				<div class="card">
+					<div class="card-body p-0">
+						<a href="{{ path('spots_show', {'id': s.id}) }}">
+							<img src="{{ asset('assets/images/') }}/{{ s.images[0] }}" class="w-100" style="height: 200px;">
+						</a>
+						<p class="float-left">
+							<a href="{{ path('brand_show', {'id': s.brand.id}) }}">{{ s.brand.title }}</a> 
+							<a href="{{ path('model_show', {'id': s.model.id}) }}">{{ s.model.title }}</a>
+						</p>
+						<p class="float-right">{{ s.city }}, {{ s.country }}</p>
+					</div>
+					<div class="card-footer">
+						<p class="float-left">
+							<i class="far fa-user" style="font-size: 20px;"></i>
+							<a href="{{ path('spotter', {'id': s.user.id}) }}">{{ s.user.username }}</a>
+						</p>	
+						<p class="float-right">{{ s.getCreatedAt()|date("m/d/Y") }}</p>								
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+			</div>
+		{% endif %}
+		</div>
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+			{# sidebar #}
+			{% include 'includes/sidebar.html.twig' %}			
+		</div>
+
+	</div>
+{% endblock %}

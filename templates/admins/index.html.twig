@@ -22,7 +22,16 @@
 				</div>
 
 				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
-					<a href="#" class="text-white align-self-center">
+					<a href="{{ path('messages') }}" class="text-white align-self-center">
+						<div class="card-body-icon display-4 text-center">
+							<i class="fas fa-folder-open"></i>
+						</div>
+						<p class="text-center">{{ messages }} MESSAGES</p>
+					</a>
+				</div>
+
+				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
+					<a href="{{ path('admin_users') }}" class="text-white align-self-center">
 						<div class="card-body-icon display-4 text-center">
 							<i class="fas fa-users"></i>
 						</div>
@@ -31,7 +40,7 @@
 				</div>
 
 				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
-					<a href="#" class="text-white align-self-center">
+					<a href="{{ path('admin_spots') }}" class="text-white align-self-center">
 						<div class="card-body-icon display-4 text-center">
 							<i class="fas fa-images"></i>
 						</div>
@@ -40,7 +49,7 @@
 				</div>
 
 				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
-					<a href="#" class="text-white align-self-center">
+					<a href="{{ path('admin_comments') }}" class="text-white align-self-center">
 						<div class="card-body-icon display-4 text-center">
 							<i class="fas fa-comments"></i>
 						</div>
@@ -49,7 +58,7 @@
 				</div>
 
 				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
-					<a href="#" class="text-white align-self-center">
+					<a href="{{ path('brandAndModel') }}" class="text-white align-self-center">
 						<div class="card-body-icon display-4 text-center">
 							<i class="fas fa-folder-open"></i>
 						</div>
@@ -58,7 +67,7 @@
 				</div>
 
 				<div class="card bg-primary d-flex flex-row justify-content-center my-1 mx-1 py-3 px-3">
-					<a href="#" class="text-white align-self-center">
+					<a href="{{ path('brandAndModel') }}" class="text-white align-self-center">
 						<div class="card-body-icon display-4 text-center">
 							<i class="fas fa-folder-open"></i>
 						</div>

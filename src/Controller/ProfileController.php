@@ -62,9 +62,19 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         return $this->render('profile/index.html.twig', [
+            'title' => 'Spotter: '.$user->getFirstname()." ".$user->getLastname(),
+            'user'  => $user
+        ]);
+    }
+
+    /**
+     * @Route("/spotter/{id}", name="spotter", requirements={"id":"\d+"})
+     */
+    public function show(User $user)
+    {
+        return $this->render('users/show.html.twig', [
             'title' => 'Profile: '.$user->getFirstname()." ".$user->getLastname(),
-            'user'  => $user,
-            'spots' => []
+            'user'  => $user
         ]);
     }
 

@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ModelRepository")
+ * @UniqueEntity(fields="title", message="This title is already used")
  */
-class Model implements \Serializable
+class Model implements \JsonSerializable, \Serializable
 {
     /**
      * @ORM\Id()
@@ -20,6 +22,8 @@ class Model implements \Serializable
 
     /**
      * @ORM\Column(type="string", length=191)
+     * @Assert\NotBlank(message = "Title is empty.")
+     * @Assert\Length(min=2, max=191, minMessage = "Title is too short. It should have 2 characters or more.")
      */
     private $title;
 
@@ -36,7 +40,7 @@ class Model implements \Serializable
     private $brand;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="model")
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="model", cascade={"remove"})
      */
     private $posts;
 
@@ -84,6 +88,16 @@ class Model implements \Serializable
     public function getBrand() { return $this->brand; }
  
     public function setBrand($brand): void { $this->brand = $brand; }  
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id'         => $this->id,
+            'title'      => $this->title,
+            'created_at' => $this->created_at,
+            'brand_id'   => $this->brand,
+        ];
+    }
 
     public function serialize()
     {

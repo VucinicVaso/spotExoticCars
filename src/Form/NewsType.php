@@ -22,7 +22,7 @@ class NewsType extends AbstractType
                         'multiple' => 'multiple'
                     )
                 ))
-                ->add('update', SubmitType::class);        
+                ->add('create', SubmitType::class);        
     }
 
     public function configureOptions(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)

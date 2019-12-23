@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	
+	{# spot first image and text #}
+	<div class="row" id="text-block">
+		<img src="{{ asset('assets/images/') }}/{{ spot.images[0] }}" />
+		<h2>{{ spot.brand.title }} {{ spot.model.title }}</h2>
+	</div>
+
+	<div class="row">
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+			{# spot image #}
+			<div class="d-flex flex-column flex-wrap justify-content-center">
+			{% for id, image in spot.images %}
+				<img src="{{ asset('assets/images/') }}/{{ image }}" class="mt-1" id="post_img">
+			{% endfor %}
+			</div>
+		
+			{# comment form #}
+			<div class="d-flex flex-column flex-wrap justify-content-center text-white">
+		        {{ form_start(form) }}
+		        {{ form_widget(form) }}
+		        {{ form_end(form) }}
+
+	        	{% for message in app.flashes('notice') %}
+	            <div class="card-footer alert alert-info"><p class="text-center">{{ message }}</p></div>
+	        	{% endfor %}					
+			</div>			
+		</div>
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+			{# spot info #}
+			<div class="d-flex flex-column flex-wrap justify-content-left pt-1 text-white">
+				<p>SPOT DETAILS </p>
+				<div class="justify-content-left d-flex flex-row justify-content-around">
+					<p><i class="far fa-images"> {{ spot.images|length }}</i></p>
+					<p><i class="far fa-eye"> {{ spot.views }}</i></p>
+					<p><i class="far fa-comments"> {{ spot.comments|length }}</i></p>
+				</div>
+				<p>SPOTTER <small class="float-right"><a href="{{ path('spotter', {'id': spot.user.id}) }}">{{ spot.user.username }}</a></small></p>
+				<p>SPOTTED IN <small class="float-right">{{ spot.city }}, {{ spot.country }}</small></p>
+				<p>DATE <small class="float-right">{{ spot.getCreatedAt()|date("m/d/Y") }}</small></p>
+			</div>
+
+			{# simular spots #}
+			<div class="d-flex flex-column flex-wrap justify-content-left">
+				<h2 class="text-white">
+					More 
+					<a href="{{ path('model_show', {'id': spot.model.id}) }}">{{ spot.brand.title }} {{ spot.model.title }}</a> 
+					spots
+				</h2>
+				<div class="row justify-content-left">
+				{% if simular_spots is empty %}
+				{% else %}
+				{% for id, simular_spot in simular_spots %}
+				<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+					<a href="{{ path('spots_show', {'id': simular_spot.id}) }}">
+						<img src="{{ asset('assets/images/') }}/{{ spot.images[0] }}" class="w-100" style="height: 100px;" />
+					</a>
+				</div>
+				{% endfor %}
+				{% endif %}
+				</div>
+			</div>
+
+			{# sidebar #}
+			{% include 'includes/sidebar.html.twig' %}	
+
+		</div>
+
+	</div>
+
+	{# comment form and spot comments #}
+	<div class="row justify-content-left" id="margin-top">
+		<div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-12">
+		{% if spot.comments is empty %}
+			<p class="alert alert-warning text-center">0 comments!</p>
+		{% else %}
+		{% for id, c in spot.comments %}
+			<div class="media text-white">
+				<i class="far fa-user" style="font-size: 75px;"></i>
+				<div class="media-body">
+					<h4>{{ c.name }} <small><i>Posted on {{ c.getCreatedAt()|date("m/d/Y") }}</i></small></h4>
+					<p>{{ c.comment }}</p>  
+				</div>
+			</div>	
+			<hr>
+		{% endfor %}
+		{% endif %}
+		</div>
+	</div>
+
+{% endblock %}

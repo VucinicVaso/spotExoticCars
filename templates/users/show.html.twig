@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+			<h2 class="text-white">All spots from {{ user.username }} ({{ user.firstname }} {{ user.lastname }})</h2>
+			
+			<h3 class="text-white pt-3">Spotter info</h3>
+			<div class="row justify-content-around mb-2">
+				<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+					<p class="text-white">Firstname <span class="float-right">{{ user.firstname }}</span></p>
+					<p class="text-white">Lastname <span class="float-right">{{ user.lastname }}</span></p>
+					<p class="text-white">Username <span class="float-right">{{ user.username }}</span></p>
+					<p class="text-white">Email <span class="float-right">{{ user.email }}</span></p>
+					<p class="text-white">Age <span class="float-right"{{ user.getDateOfBirth()|date("m/d/Y") }}</span></p>
+				</div>
+				<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+					<p class="text-white">City <span class="float-right">{{ user.city }}</span></p>
+					<p class="text-white">Country <span class="float-right">{{ user.country }}</span></p>
+					<p class="text-white">Gender <span class="float-right">{{ user.gender }}</span></p>
+					<p class="text-white">Spots <span class="float-right">{{ user.posts|length }}</span></p>
+					<p class="text-white">Profile created at <span class="float-right">{{ user.getCreatedAt()|date("m/d/Y") }}</span></p>
+				</div>
+			</div>
+			
+			{% if user.posts is empty %}
+				<p class="alert alert-warning text-center">0 spots by this user.</p>
+			{% else %}
+			<div class="row">
+			{% for id, s in user.posts %}
+				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 py-2">
+					<div class="card">
+						<div class="card-body p-0">
+							<a href="{{ path('spots_show', {'id': s.id}) }}">
+								<img src="{{ asset('assets/images/') }}/{{ s.images[0] }}" class="w-100" style="height: 200px;">
+							</a>
+							<p class="float-left">
+								<a href="{{ path('brand_show', {'id': s.brand.id}) }}">{{ s.brand.title }}</a> 
+								<a href="{{ path('model_show', {'id': s.model.id}) }}">{{ s.model.title }}</a>
+							</p>
+							<p class="float-right">{{ s.city }}, {{ s.country }}</p>
+						</div>
+						<div class="card-footer">
+							<p class="float-left">
+								<i class="far fa-user" style="font-size: 20px;"></i>
+								<a href="{{ path('spotter', {'id': s.user.id}) }}">{{ s.user.username }}</a>
+							</p>	
+							<p class="float-right">{{ s.getCreatedAt()|date("m/d/Y") }}</p>								
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+
+		</div>
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+			{# spotter profile image #}
+			<div class="d-flex flex-row flex-wrap justify-content-center mt-2">
+				<img src="{{ asset('assets/images/') }}/{{ user.getProfileImage() }}" class="w-100" id="profile-img">
+			</div>
+			
+			{# sidebar #}
+			{% include 'includes/sidebar.html.twig' %}		
+
+		</div>
+
+	</div>
+
+{% endblock %}

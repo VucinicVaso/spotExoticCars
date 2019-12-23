@@ -1,0 +1,58 @@
+<!-- The create brand Modal -->
+<div class="modal" id="brandCreate">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">CREATE:</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="submit-brand-form">
+          <div class="form-group">
+            <label for="create-title">Title:</label>
+            <input type="text" class="form-control" name="create-title" id="create-title" required />
+          </div>
+          <button class="btn btn-success">CREATE</button>
+        </form>
+      </div>
+
+      <div class="modal-footer" id="create-brand-error"></div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('#submit-brand-form').submit(async function(e) {
+      e.preventDefault();
+      let title = $(this).find("#create-title").val();
+
+      let result = await fetch(`${ ADDRESS }brand/create`, {
+        method: "POST", 
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ "title": title })
+      })
+      .then(result => result.json())
+      .then(result => { return result; });
+
+      if(result.errors !== undefined && result.errors != null && result.errors.length > 0){
+        let show_errors = result.errors.map((err) => { return `<p class="alert alert-danger">${err}</p>`; });
+        $("#create-brand-error").html(show_errors);
+      }
+      if(result.success !== undefined && result.success != null && result.success !== "") {
+        $('#submit-brand-form input').val(null);
+        $("#create-brand-error").html();
+        alert(result.success);
+        location.reload();
+      }
+    });
+
+  });
+</script>

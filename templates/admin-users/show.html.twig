@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row py-5 text-white">
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 text-center mb-2">
+        	<div class="d-flex flex-column justify-content-center">
+        		<a href="{{ path('admin_spots') }}" class="text-white mt-3 mb-3"><i class="fas fa-arrow-left"></i> BACK TO THE ADMIN - SPOTS</a>
+				<img src="{{ asset('assets/images/') }}/{{ user.getProfileImage() }}" class="w-100" style="height: 300px;" />
+			</div>
+		</div>
+
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+			<div class="card bg-dark border border-primary mx-5">
+				<div class="card-header align-items-center">
+					<a href="{{ path('admin_users_delete', {'id': user.id}) }}" class="btn btn-outline-danger w-100">Delete</a>
+				</div>
+				<div class="card-body d-flex flex-column justify-content-around">
+					<p>Id: <span class="badge badge-primary float-right">{{ user.id }}</span></p>
+					<p>Firstname: <span class="badge badge-primary float-right">{{ user.firstname }}</span></p>
+					<p>Lastname: <span class="badge badge-primary float-right">{{ user.lastname }}</span></p>
+					<p>Email: <span class="badge badge-primary float-right">{{ user.email }}</span></p>
+					<p>Date of birth: <span class="badge badge-primary float-right">{{ user.getDateOfBirth()|date("m/d/Y") }}</span></p>
+					<p>City: <span class="badge badge-primary float-right">{{ user.city }}</span></p>
+					<p>Country: <span class="badge badge-primary float-right">{{ user.country }}</span></p>
+					<p>Gender: <span class="badge badge-primary float-right">{{ user.gender }}</span></p>
+					<p>Profile created: <span class="badge badge-primary float-right">{{ user.getCreatedAt()|date("m/d/Y") }}</span></p>
+				</div>
+				<div class="card-body">
+				{% if user.posts is empty %}
+					<p class="alert alert-warning">This user has 0 spots.</p>
+				{% else %}
+					<h2 class="text-center">Spots</h2>
+					
+					<table class="table text-white">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Image</th>
+								<th>Created at</th>
+								<th>View</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for id, s in user.posts %}
+							<tr>
+								<td>{{ s.id }}</td>
+								<td><img src="{{ asset('assets/images/') }}/{{ s.getImages()[0] }}" class="w-100" style="height: 100px;"></td>
+								<td>{{ s.getCreatedAt()|date("m/d/Y") }}</td>
+								<td><a href="{{ path('admin_spots_show', {'id': s.id}) }}" class="btn btn-info">View</a></td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				{% endif %}
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+<div class="modal" id="newSpotModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Create</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<!-- Modal body -->
+			<div class="modal-body">
+				<form enctype="multipart/form-data" id="submit-form">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+								<label for="title">SELECT BRAND:</label>
+								<select name="brand" id="form_select_brand" class="form-control" required>
+									<option></option>
+								</select>						
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+								<label for="model">SELECT MODEL:</label>
+								<select name="model" id="form_select_model" class="form-control" required>
+									<!-- select model by brand -->
+									<option></option>
+								</select>							
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+								<label for="form-city">City:</label>
+								<input type="text" name="form-city" class="form-control" id="form_city" required>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+								<label for="form-country">Country:</label>
+								<input type="text" name="form_country" class="form-control" id="form_country" required>
+							</div>
+						</div>
+					</div>	
+					<div class="form-group d-flex flex-row justify-content-around">
+						<label for="file">IMAGES: (5)</label>
+						<label class="btn btn-info">
+							<i class="fas fa-camera"></i>
+							<style type="text/css">
+								input[type="file"] {
+								    display: none;
+								}
+							</style>
+							<input type="file" name="file[]" id="form_file" multiple required />	
+						</label>
+					</div>
+					<div class="row">
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+							<button type="submit" class="btn btn-info w-100 mt-1 mb-2">CREATE</button>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+							<button type="button" class="btn btn-danger w-100" data-dismiss="modal" id="exit">Close</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<div class="d-flex flex-column justify-content-around" id="spot_modal_msg"></div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		/*************** load brands ********************/
+	    $('#newSpotModal').on('show.bs.modal', function (e) {
+	    	getBrands();
+	    });
+
+		/*************** submit form ***************/
+		$("#submit-form").submit(function(e) {
+			e.preventDefault();
+			let brand   = document.querySelector("#form_select_brand").value;
+			let model   = document.querySelector("#form_select_model").value;
+			let city    = document.querySelector("#form_city").value;
+			let country = document.querySelector("#form_country").value;
+			let images  = document.querySelector("#form_file");
+
+			let form = new FormData();
+			form.append("brand", brand);
+			form.append("model", model);
+			form.append("city", city);
+			form.append("country", country);
+			Array.from(images.files).forEach((f) => { form.append('images[]', f); });
+
+			submitForm(form);
+		});
+
+	});
+
+	/* show success-errors message */
+	function showMessage(messages){
+		if(Array.isArray(messages)){
+			console.log("arr");
+			let msgArr = messages.map((m) => { return `<p class="alert alert-danger mb-1">${ m }<p>`; });
+	    	$("#spot_modal_msg").html(`${ msgArr }`);
+		}else {
+			console.log("not arr");
+			$("#spot_modal_msg").html(`<p class="alert alert-success w-100">${ messages }</p>`);
+		}
+	}
+
+	/* get brands */
+	async function getBrands() {
+	    let result = await fetch(`${ ADDRESS }brand/get`, {
+	      method: "GET", 
+	      headers: {
+	        'Content-Type': 'application/json',
+	        'Accept': 'application/json',
+	      }
+	    })
+	    .then(result => result.json())
+	    .then(result => { return result; });
+
+	    if(result.brands.length > 0){
+	    	let list = result.brands.map((b) => { 
+	    		return `<option value="${b.id}" onclick="selectBrand(${b.id});">${b.title}</option>`; 
+	    	});
+	      	$("#form_select_brand").html(list);
+	    }
+	}
+
+	/* select brand and show models by brand id */
+	async function selectBrand(id) {
+	    let result = await fetch(`${ ADDRESS }model/get/${id}`, {
+	      method: "GET", 
+	      headers: {
+	        'Content-Type': 'application/json',
+	        'Accept': 'application/json',
+	      }
+	    })
+	    .then(result => result.json())
+	    .then(result => { return result; });
+
+	    if(result.models.length > 0){
+	    	let list = result.models.map((m) => { return `<option value="${m.id}">${m.title}</option>`; });
+	      	$("#form_select_model").html(list);
+	    }
+	}
+
+	/* create new spot | submit form */
+	async function submitForm(form) {
+	    let result = await fetch(`${ ADDRESS }spots/create`, {
+	    	method: "POST", 
+			headers: {
+				//'Content-Type': 'application/json',
+            	'Accept': 'application/json'
+	      	},
+	    	body: form
+	    })
+	    .then(result => result.json())
+	    .then(result => { return result; });
+
+	    if(result.errors && result.errors !== undefined && result.errors != null && result.errors.length > 0){
+	    	showMessage(result.errors);
+	    }
+
+	    if(result.success && result.success !== "" && result.success !== null && result.success !== undefined) {
+	    	showMessage(result.success);
+	    }
+	}
+</script>

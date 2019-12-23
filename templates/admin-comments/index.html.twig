@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="row py-5 text-white">
+
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 d-flex flex-column justify-content-around flex-wrap text-center">
+        	<a href="{{ path('admin_profile') }}" class="text-white mt-3 mb-3"><i class="fas fa-arrow-left"></i> BACK TO THE ADMIN PANEL</a>
+
+			<h1>{{ title }}</h1>
+
+            {% for message in app.flashes('notice') %}
+            <div class="card-header alert alert-danger">
+                <p class="text-center">{{ message }}</p>
+            </div>
+            {% endfor %}
+		</div>
+
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+			<table class="table text-white">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Spot</th>
+						<th>Comment</th>
+						<th>Created at</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% if comments is empty %}
+					<p class="alert alert-warning text-center">0 new comments!</p>		
+					{% else %}
+					{% for id, c in comments %}
+					<tr>
+						<td>{{ c.id }}</td>
+						<td>{{ c.name }}</td>
+						<td>{{ c.email }}</td>
+						<td>
+							<a href="{{ path('admin_spots_show', {'id': c.post.id}) }}">
+								<img src="{{ asset('assets/images/') }}/{{ c.post.getImages()[0] }}" class="w-100" style="height: 100px;">
+							</a>
+						</td>
+						<td>{{ c.comment }}</td>
+						<td>{{ c.getCreatedAt()|date("m/d/Y") }}</td>
+						<td><a href="{{ path('admin_comments_delete', {'id': c.id}) }}" class="btn btn-danger">Delete</a></td>
+					</tr>
+					{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+{% endblock %}

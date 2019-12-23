@@ -106,22 +106,22 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="user", cascade={"remove"})
      */
     private $news;
     
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Brand", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Brand", mappedBy="user", cascade={"remove"})
      */
     private $brands;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Model", mappedBy="user", cascade={"remove"})
      */
     private $models;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user", cascade={"remove"})
      */
     private $posts;
 
@@ -147,9 +147,6 @@ class User implements UserInterface, \Serializable
 
     // post
     public function getPosts() { return $this->posts; }
-
-    // votes
-    public function getVotes() { return $this->votes; }
 
     public function getId(): ?int { return $this->id; }
 

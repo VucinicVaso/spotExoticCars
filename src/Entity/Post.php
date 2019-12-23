@@ -48,7 +48,7 @@ class Post implements \Serializable
     private $views;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", cascade={"remove"})
      */
     private $comments;
 
@@ -75,7 +75,6 @@ class Post implements \Serializable
         $this->comments = new ArrayCollection();
     }
 
-    // comment
     public function getComments() { return $this->comments; }
 
     public function getId(): ?int { return $this->id; }
@@ -152,9 +151,7 @@ class Post implements \Serializable
             $this->model,
             $this->created_at,
             $this->images,
-            $this->views,
-            $this->brand,
-            $this->model
+            $this->views
         ]);
     }
 
@@ -169,9 +166,8 @@ class Post implements \Serializable
             $this->model,
             $this->created_at,
             $this->images,
-            $this->views,
-            $this->brand,
-            $this->model
+            $this->views
         ) = unserialize($serialized);
-    } 
+    }
+
 }

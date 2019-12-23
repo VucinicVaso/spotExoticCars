@@ -1,0 +1,1 @@
+const ADDRESS = 'http://localhost:8000/';

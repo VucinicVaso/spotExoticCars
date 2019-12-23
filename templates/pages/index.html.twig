@@ -8,7 +8,7 @@
 	{% if article is empty %}
 	{% else %}
 	<div class="row">
-		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 w-100">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 w-100 p-0">
 			<div id="parallax" style="background-image: url({{ asset('assets/images') }}/{{ article.images[0] }});">
 				<div class="d-flex flex-column" style="position: absolute; bottom: 0;">
 					<a href="{{ path('news_show', {'id': article.id}) }}" class="btn btn-danger ml-2" style="max-width: 75px;">READ</a>
@@ -32,7 +32,7 @@
 						<div class="card-header">
 							<p class="text-center" id="topspots">NEWS</p>
 						</div>
-						<div class="card-body">
+						<div class="card-body p-0">
 							<img src="{{ asset('assets/images/') }}{{ article.images[0] }}" class="w-100" style="height: 200px;">
 						</div>
 						<div class="card-footer">
@@ -51,16 +51,16 @@
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 col-sm-12">
 		
 			<div class="d-flex flex-row justify-content-around flex-wrap my-2 mx-2 py-1 px-1 text-center">		
-				<a href="#" class="text-white" style="font-size: 30px;">
+				<a href="{{ path('spots') }}" class="text-white" style="font-size: 30px;">
 					{{ count_posts }} spots
 				</a>
-				<a href="#" class="text-white">
+				<a href="{{ path('spots') }}" class="text-white">
 					{{ count_posts_by_day }} spots in the last 24 hours
 				</a>
 			</div>
 		
-			{# followus / create post #}
-			{% include 'includes/followus.html.twig' %}
+			{# sidebar #}
+			{% include 'includes/sidebar.html.twig' %}
 
 		</div>
 

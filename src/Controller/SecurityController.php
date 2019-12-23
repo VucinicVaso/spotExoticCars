@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 //entity, repository, type
 use App\Entity\User;

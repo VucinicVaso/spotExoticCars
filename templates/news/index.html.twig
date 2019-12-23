@@ -9,12 +9,12 @@
 		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
 
 			<div class="d-flex flex-column justify-content-around flex-wrap text-center text-white">
-            	<a href="{{ path('admin_profile') }}" class="text-white mt-3 mb-3"><i class="fas fa-arrow-left"></i> BACK TO THE PROFILE</a>
+            	<a href="{{ path('admin_profile') }}" class="text-white mt-3 mb-3"><i class="fas fa-arrow-left"></i> BACK TO THE ADMIN PANEL</a>
 				<h1>News</h1>
 			</div>
 			
 		{% if news is empty %}
-			<p class="text-center alert alert-danger">0 news!</p>
+			<p class="text-center alert alert-danger">0 articles!</p>
 		{% else %}
 	
 			{% for id, article in news %}
@@ -39,10 +39,7 @@
 							<p>{{ article.body }}</p>
 						</div>
 						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-								<div class="btn-group w-100">
-								<a href="#" class="btn btn-warning w-100">EDIT</a>
-								<a href="{{ path('news_delete', {'id': article.id}) }}" class="btn btn-danger w-100">DELETE</a>
-							</div> 
+							<a href="{{ path('news_delete', {'id': article.id}) }}" class="btn btn-danger w-100">DELETE</a> 
 						</div>
 					</div>
 				</div>

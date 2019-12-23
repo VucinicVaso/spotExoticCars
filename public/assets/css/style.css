@@ -40,28 +40,25 @@ footer {
 }
 
 /* spot.php */
-#post_img_1 {
+#text-block {
+	position: relative;
+	text-align: center;
+	filter: brightness(100%);
+}
+
+#text-block img {
 	width: 100%;
 	height: 400px;
 	filter: brightness(40%);
 }
 
-#text-block {
-	margin: auto;
-	margin-top: -275px;
-	width: 50%;
-	filter: brightness(100%);
-}
-
-#vote {
-	margin: auto;
-	margin-top: 50px; 
-	width: 100%;
-}
-
 #text-block h2 {
-	color: white;
-	font-size: 100px;    
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 65px;
+	transform: translate(-50%, -50%);
+	color: #fff;
 }
 
 #post_img {
