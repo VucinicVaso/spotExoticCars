@@ -11,7 +11,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 my-2">
 			{# spot image #}
 			<div class="d-flex flex-column flex-wrap justify-content-center">
 			{% for id, image in spot.images %}
@@ -31,11 +31,11 @@
 			</div>			
 		</div>
 
-		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 my-2">
 			{# spot info #}
 			<div class="d-flex flex-column flex-wrap justify-content-left pt-1 text-white">
 				<p>SPOT DETAILS </p>
-				<div class="justify-content-left d-flex flex-row justify-content-around">
+				<div class="d-flex flex-row justify-content-around">
 					<p><i class="far fa-images"> {{ spot.images|length }}</i></p>
 					<p><i class="far fa-eye"> {{ spot.views }}</i></p>
 					<p><i class="far fa-comments"> {{ spot.comments|length }}</i></p>
