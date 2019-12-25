@@ -20,16 +20,16 @@
 			{% for id, article in news %}
 			<div class="card bg-primary my-1 mx-1 py-1 px-1">
 				<div class="card-body text-white flex-wrap">
-					<h2 class="text-center">{{ article.title }} - <small>({{ article.getCreatedAt()|date("m/d/Y") }})</small></h2>
-					<div class="row">
+					<h3 class="text-center">{{ article.title }} - <small>({{ article.getCreatedAt()|date("m/d/Y") }})</small></h3>
+					<div class="row mb-1">
 					{% for id, image in article.images %}
 						{% if id == 0 %}
-						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
-							<img src="{{ asset('assets/images/') }}{{ image }}" class="w-100 img-fluid" style="height: 200px;" />
+						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-0">
+							<img src="{{ asset('assets/images/') }}{{ image }}" class="w-100 img-fluid" style="height: 250px;" />
 						</div>
 						{% else %}
-						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
-							<img src="{{ asset('assets/images/') }}{{ image }}" class="w-100 img-fluid" style="height: 200px;"  />
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0">
+							<img src="{{ asset('assets/images/') }}{{ image }}" class="w-100 img-fluid" style="height: 250px;"  />
 						</div>
 						{% endif %}
 					{% endfor %}
@@ -50,7 +50,7 @@
 		</div>
 
 		{# create article #}
-		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2">
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 my-2">
 			<div class="card bg-primary">
                 {% for message in app.flashes('notice') %}
                 <div class="card-header alert alert-warning">

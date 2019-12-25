@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,10 +18,10 @@ use App\Entity\User;
 use App\Form\ProfileType;
 use App\Form\ProfilePasswordType;
 use App\Repository\UserRepository;
+use App\Repository\PostRepository;
 
 class ProfileController extends AbstractController
 {
-
     /**
      * @var UserRepository
      */   
@@ -57,13 +57,14 @@ class ProfileController extends AbstractController
      * @Route("/profile", name="profile")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function index()
+    public function index(PostRepository $postRepository)
     {
-        $user = $this->getUser();
+        $user = $this->userRepository->profileData($this->getUser());
 
         return $this->render('profile/index.html.twig', [
-            'title' => 'Spotter: '.$user->getFirstname()." ".$user->getLastname(),
-            'user'  => $user
+            'title' => $user['firstname']." ".$user['lastname'],
+            'user'  => $user,        
+            'spots' => $postRepository->spotsByUserId($user['id'])
         ]);
     }
 

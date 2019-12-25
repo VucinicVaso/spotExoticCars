@@ -15,8 +15,8 @@
 			</div>
 
 			<img src="{{ asset('assets/images/') }}{{ article.images[0] }}" class="w-100" style="height: 500px;">
-			<hr>
-			<p>{{ article.body }}</p>
+
+			<p class="py-2 px-2">{{ article.body }}</p>
 		
 			<div class="row">
 			{% for id, image in article.images %}
@@ -31,7 +31,7 @@
 		
 		</div>
 		
-		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-5 mb-5">
+		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 my-5">
 			{# sidebar #}
 			{% include 'includes/sidebar.html.twig' %}
 		</div>

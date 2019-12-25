@@ -22,12 +22,12 @@
 	<div class="row">
 
 		{# news #}
-		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-2 mb-2">
+		<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 my-2">
 			<div class="row">
 			{% if news is empty %}
 			{% else %}
 				{% for id, article in news %}
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-2 mb-2">
+				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 my-2">
 					<div class="card bg-dark text-white">
 						<div class="card-header">
 							<p class="text-center" id="topspots">NEWS</p>
@@ -47,9 +47,8 @@
 			</div>
 		</div>
 
-		{# number of total posts #}
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 col-sm-12">
-		
+			{# number of total posts #}		
 			<div class="d-flex flex-row justify-content-around flex-wrap my-2 mx-2 py-1 px-1 text-center">		
 				<a href="{{ path('spots') }}" class="text-white" style="font-size: 30px;">
 					{{ count_posts }} spots
@@ -61,7 +60,6 @@
 		
 			{# sidebar #}
 			{% include 'includes/sidebar.html.twig' %}
-
 		</div>
 
 	</div>
