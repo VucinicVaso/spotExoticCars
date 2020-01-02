@@ -39,6 +39,7 @@ class Post implements \Serializable
 
     /**
      * @ORM\Column(type="array", nullable=true)
+     * @Assert\NotBlank(message = "Please upload images.")
      */
     private $images = [];
 
@@ -59,12 +60,14 @@ class Post implements \Serializable
     private $user;
 
     /**
+     * @Assert\NotBlank(message = "Brand is empty.")
      * @ORM\ManyToOne(targetEntity="App\Entity\Brand", inversedBy="posts")
      * @ORM\JoinColumn()
      */     
     private $brand;
 
     /**
+     * @Assert\NotBlank(message = "Model is empty.")
      * @ORM\ManyToOne(targetEntity="App\Entity\Model", inversedBy="posts")
      * @ORM\JoinColumn()
      */     

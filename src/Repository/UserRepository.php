@@ -46,4 +46,15 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /* get profile data */
+    public function userData($user)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.firstname, u.lastname, u.username, u.profile_image, u.email, u.date_of_birth, u.city, u.country, u.gender, u.created_at')
+            ->andWhere('u.id = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

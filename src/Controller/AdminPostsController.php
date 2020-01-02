@@ -9,11 +9,11 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 
-// entity, repository, form
+// entity, repository, form, services
 use App\Entity\Post;
 use App\Repository\PostRepository;
+use App\Service\SpotService;
 
 class AdminPostsController extends AbstractController
 {
@@ -21,10 +21,6 @@ class AdminPostsController extends AbstractController
      * @var PostRepository
      */
     private $postRepository;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
     /**
      * @var RouterInterface
      */
@@ -34,10 +30,9 @@ class AdminPostsController extends AbstractController
      */
     private $flashBag;
 
-	public function __construct(PostRepository $postRepository, EntityManagerInterface $entityManager, RouterInterface $router, FlashBagInterface $flashBag)
+	public function __construct(PostRepository $postRepository, RouterInterface $router, FlashBagInterface $flashBag)
 	{
 		$this->postRepository = $postRepository;
-		$this->entityManager  = $entityManager;
         $this->router         = $router;
         $this->flashBag       = $flashBag;
 	}
@@ -70,12 +65,15 @@ class AdminPostsController extends AbstractController
      * @Route("admin-spots/delete/{id}", name="admin_spots_delete")
      * @Security("is_granted('ROLE_ADMIN')")
     */
-    public function destroy(Post $post)
+    public function destroy(SpotService $spotService, Post $post)
     {
-        $this->entityManager->remove($post);
-        $this->entityManager->flush();
+        if(!empty($post)){
+            $spotService->destroy($post);
+            $this->flashBag->add('notice', 'Spot deleted successfully!');
+        }else {
+            $this->flashBag->add('notice', 'Error! Something went wrong. Please try again.');
+        }
 
-        $this->flashBag->add('notice', 'Spot deleted successfully!');
         return new RedirectResponse($this->router->generate('admin_spots'));
     }
 

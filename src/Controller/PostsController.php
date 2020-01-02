@@ -12,16 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
-// entity, repository, form
+// entity, repository, form, services
 use App\Entity\Post;
 use App\Entity\Comment;
 use App\Repository\PostRepository;
 use App\Repository\BrandRepository;
 use App\Repository\ModelRepository;
 use App\Form\CommentType;
-
-// services
-use App\Service\SpotViewed;
+use App\Service\SpotService;
 
 class PostsController extends AbstractController
 {
@@ -42,6 +40,10 @@ class PostsController extends AbstractController
      */
     private $entityManager;
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+    /**
      * @var RouterInterface
      */
     private $router; 
@@ -49,25 +51,16 @@ class PostsController extends AbstractController
      * @var FlashBagInterface
      */
     private $flashBag;
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-    /**
-     * @var SpotViewed
-     */
-    private $spotViewed;
 
-	public function __construct(PostRepository $postRepository, BrandRepository $brandRepository, ModelRepository $modelRepository, EntityManagerInterface $entityManager, RouterInterface $router, FlashBagInterface $flashBag, FormFactoryInterface $formFactory, SpotViewed $spotViewed)
+	public function __construct(PostRepository $postRepository, BrandRepository $brandRepository, ModelRepository $modelRepository, EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, RouterInterface $router, FlashBagInterface $flashBag)
 	{
 		$this->postRepository  = $postRepository;
 		$this->brandRepository = $brandRepository;
 		$this->modelRepository = $modelRepository;
 		$this->entityManager   = $entityManager;
+        $this->formFactory     = $formFactory;
         $this->router          = $router;
         $this->flashBag        = $flashBag;
-        $this->formFactory     = $formFactory;
-        $this->spotViewed      = $spotViewed;
     }
 
     /**
@@ -84,9 +77,9 @@ class PostsController extends AbstractController
     /**
      * @Route("/spots/{id}", name="spots_show", requirements={"id":"\d+"})
      */
-    public function show(Post $post, Request $request)
+    public function show(Post $post, SpotService $spotService, Request $request)
     {
-        $this->spotViewed->setIsViewed($post); // service: set spot is viewed
+        $spotService->setIsViewed($post); // service: set spot is viewed
 
         $comment = new Comment();
         $form = $this->formFactory->create(CommentType::class, $comment);
@@ -129,16 +122,15 @@ class PostsController extends AbstractController
      * @Route("spots/delete/{id}", name="spots_delete", requirements={"id":"\d+"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
     */
-    public function destroy(Post $post)
+    public function destroy(SpotService $spotService, Post $post)
     {
-    	$user = $this->getUser();
+        if(!empty($post)){
+            $spotService->destroy($post);
+            $this->flashBag->add('notice', 'Spot deleted successfully!');
+        }else {
+            $this->flashBag->add('notice', 'Error! Something went wrong. Please try again.');
+        }
 
-    	if($post->getUser() === $this->getUser()){
-	        $this->entityManager->remove($post);
-	        $this->entityManager->flush();
-    	}
-
-        $this->flashBag->add('notice', 'Spot deleted successfully!');
         return new RedirectResponse($this->router->generate('profile'));
     }
 
@@ -146,24 +138,26 @@ class PostsController extends AbstractController
      * @Route("/spots/create", name="spots_create", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function create(Request $request)
+    public function create(SpotService $spotService, Request $request)
     {
         $files = $request->files->get('images');
         $imgArr = [];
-        foreach($files as $file){
-            $filename = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('img_directory'), $filename);
-            $imgArr[] = $filename;
+        if(!empty($files)){
+            foreach($files as $file){
+                $filename = md5(uniqid()).'.'.$file->guessExtension();
+                $file->move($this->getParameter('img_directory'), $filename);
+                $imgArr[] = $filename;
+            }
         }
 
-		$brand = $this->brandRepository->find($request->get('brand'));
+        $brand = $this->brandRepository->find($request->get('brand'));
         $model = $this->modelRepository->find($request->get('model'));
 
-        $validationErrors = $this->postRepository->validateAndCreatePost($brand, $model, $request->get('city'), $request->get('country'), $imgArr, $this->getUser());
+        $validationErrors = $spotService->store($brand, $model, $request->get('city'), $request->get('country'), $imgArr, $this->getUser());
 
         return !empty(($validationErrors))
-        	? $this->json(['errors' => $validationErrors], 400)
-        	: $this->json(['success' => 'Spot created successfully!'], 200);
+            ? $this->json(['errors' => $validationErrors], 400)
+            : $this->json(['success' => 'Spot created successfully!'], 200);
     }
 
 }

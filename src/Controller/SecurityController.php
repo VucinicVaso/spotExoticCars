@@ -72,7 +72,7 @@ class SecurityController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $this->flashBag->add('notice', 'Profile createad successfully!');
+            $this->flashBag->add('notice', 'Profile created successfully!');
             return new RedirectResponse($this->router->generate('security_register'));
         }
 

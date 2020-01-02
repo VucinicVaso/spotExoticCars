@@ -64,18 +64,21 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             'title' => $user['firstname']." ".$user['lastname'],
             'user'  => $user,        
-            'spots' => $postRepository->spotsByUserId($user['id'])
+            'spots' => $postRepository->profileSpots($user['id'])
         ]);
     }
 
     /**
      * @Route("/spotter/{id}", name="spotter", requirements={"id":"\d+"})
      */
-    public function show(User $user)
+    public function show(User $user, PostRepository $postRepository)
     {
+        $user = $this->userRepository->userData($user);
+
         return $this->render('users/show.html.twig', [
-            'title' => 'Profile: '.$user->getFirstname()." ".$user->getLastname(),
-            'user'  => $user
+            'title' => 'Spotter: '.$user['firstname']." ".$user['lastname'],
+            'user'  => $user,
+            'spots' => $postRepository->spotsByUserId($user['id'])
         ]);
     }
 
@@ -132,6 +135,7 @@ class ProfileController extends AbstractController
             $this->flashBag->add('notice', 'Profile updated successfully!');
             return new RedirectResponse($this->router->generate('profile_edit_password'));
         }
+
         return $this->render('profile/password.html.twig', [
             'title' => 'Update password',
             'form'  => $form->createView()

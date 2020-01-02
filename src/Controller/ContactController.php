@@ -63,7 +63,6 @@ class ContactController extends AbstractController
         $this->entityManager->flush();
 
         $this->flashBag->add('notice', 'Message was deleted');
-
         return new RedirectResponse($this->router->generate('messages'));
     }
 
